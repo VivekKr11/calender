@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 const CalendarApp = () => {
-  const [selectedYear, setSelectedYear] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [renderCalendar, setRenderCalendar] = useState(false);
 
   const yearMonthImages = {
     2016: {
@@ -16,11 +17,12 @@ const CalendarApp = () => {
       1: 'https://example.com/2017-february.jpg',
       2: 'https://example.com/2017-march.jpg',
     },
-    // Add entries for 2018 to 2024 with URLs for each month
+   
   };
 
-  const year = selectedYear.getFullYear();
-  const month = selectedYear.getMonth();
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const day = selectedDate.getDate();
 
   const getMonthName = (month) => {
     const monthNames = [
@@ -30,6 +32,15 @@ const CalendarApp = () => {
     return monthNames[month];
   };
 
+  useEffect(() => {
+    setRenderCalendar(false); 
+    setTimeout(() => setRenderCalendar(true), 0); 
+  }, [selectedDate]);
+
+  const handleTabClick = (btnYear) => {
+    setSelectedDate(new Date(btnYear, month, day));
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Yearly Calendar App</h1>
@@ -37,7 +48,7 @@ const CalendarApp = () => {
         {Array.from({ length: 9 }, (_, index) => 2016 + index).map((btnYear) => (
           <button
             key={btnYear}
-            onClick={() => setSelectedYear(new Date(btnYear, month, 1))}
+            onClick={() => handleTabClick(btnYear)}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             {btnYear}
@@ -45,20 +56,25 @@ const CalendarApp = () => {
         ))}
       </div>
       <div>
-        <h2 className="text-xl font-bold mb-2">Calendar for {year}</h2>
-        <Calendar
-          value={selectedYear}
-          onChange={(date) => setSelectedYear(date)}
-        />
-        <div className="mt-4">
-          {yearMonthImages[year] && yearMonthImages[year][month] && (
-            <img
-              src={yearMonthImages[year][month]}
-              alt={`Image for ${getMonthName(month)} ${year}`}
-              className="max-w-full"
+        <h2 className="text-xl font-bold mb-2">Calendar for {getMonthName(month)} {year}</h2>
+        {renderCalendar && (
+          <>
+            <Calendar
+              value={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
             />
-          )}
-        </div>
+            <div className="mt-4">
+              {yearMonthImages[year] && yearMonthImages[year][month] && (
+                <img
+                  src={yearMonthImages[year][month]}
+                  alt={`Image for ${getMonthName(month)} ${year}`}
+                  className="max-w-full"
+                />
+              )}
+            </div>
+          </>
+        )}
+        <p>Selected Date: {selectedDate.toDateString()}</p>
       </div>
     </div>
   );
