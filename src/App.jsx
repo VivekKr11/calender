@@ -9,12 +9,11 @@ const CalendarApp = () => {
   const [renderCalendar, setRenderCalendar] = useState(false);
 
   const updateNoticeImages = (year, month, day) => {
-    // Replace the following with the logic to fetch notice images for the selected date or month
-    // For demonstration purposes, I'm using sample URLs
+
     const dateKey = `${year}-${month + 1}-${day}`;
     const monthKey = `${year}-${month + 1}`;
 
-    // Fetch notice images for the selected date and month (replace with your logic)
+
     const dateImages = [`https://example.com/notice1-${dateKey}.jpg`, `https://example.com/notice2-${dateKey}.jpg`];
     const monthImages = [`https://example.com/notice1-${monthKey}.jpg`, `https://example.com/notice2-${monthKey}.jpg`];
 
